@@ -138,7 +138,7 @@ export const FavoritesContextProvider = ({
         station: station,
       };
 
-      const res: globalThis.Response = await handleAPIFetch(
+      let res: globalThis.Response = await handleAPIFetch(
         await fetch('/api/favorites', {
           method: 'POST',
           headers: {
@@ -154,6 +154,16 @@ export const FavoritesContextProvider = ({
       );
       setFavoritedStations((prev) => (prev ? [...prev, station] : [station]));
       const data: { message: string } = await res.json();
+
+      /*
+        Note that the radio browser votes API may not reflect updates to the vote count instantly.
+      */
+      res = await handleAPIFetch(
+        await fetch(`/api/modify/votes?uuid=${station.stationuuid}`, {
+          method: 'POST',
+          credentials: 'include',
+        })
+      );
 
       successToast(
         data.message,

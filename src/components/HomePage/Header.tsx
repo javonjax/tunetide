@@ -17,7 +17,7 @@ const Header = () => {
     const stations: RadioStation[] = await res.json();
     const randomStation: RadioStation = stations[Math.floor(Math.random() * stations.length)];
     stationContext?.setStation(randomStation);
-    stationContext?.play();
+    stationContext?.playAndUpdateClickCount(randomStation);
   };
 
   return (

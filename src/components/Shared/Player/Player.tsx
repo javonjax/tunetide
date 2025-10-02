@@ -85,6 +85,9 @@ const Player = () => {
     }
 
     if (stationContext) {
+      /*  
+        Do not update the click count from the player.
+       */
       stationContext.play();
     }
   };

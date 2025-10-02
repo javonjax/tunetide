@@ -173,8 +173,7 @@ const CarouselCard = ({
             className="cursor-pointer rounded-xl bg-linear-(--accent-gradient) p-4"
             onClick={() => {
               stationContext?.setStation(station);
-              stationContext?.play();
-              console.log(station);
+              stationContext?.playAndUpdateClickCount(station);
             }}
           >
             <Play className="h-[24px] min-h-[24px] w-[24px] min-w-[24px]" />
