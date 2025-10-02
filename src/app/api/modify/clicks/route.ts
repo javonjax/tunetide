@@ -12,10 +12,7 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
     const baseUrl: string = await getBaseUrl();
 
     if (!request.nextUrl.searchParams.get('uuid')) {
-      throw new HTTPError(
-        'Station UUID missing. Please include a station UUID in the search params.',
-        400
-      );
+      throw new HTTPError('Station UUID missing.', 400);
     }
 
     const stationUUID: string = request.nextUrl.searchParams.get('uuid')?.toString() || '';

@@ -186,7 +186,7 @@ const StationListItem = ({ station, stationContext, favoritesContext }: StationL
             className="cursor-pointer rounded-xl bg-linear-(--accent-gradient) p-4"
             onClick={() => {
               stationContext?.setStation(station);
-              stationContext?.play();
+              stationContext?.playAndUpdateClickCount(station);
             }}
           >
             <Play />
