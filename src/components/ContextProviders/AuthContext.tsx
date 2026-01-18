@@ -18,6 +18,7 @@ export interface AuthContextType {
   registrationError: string | undefined;
   clearLoginError: () => void;
   clearRegistrationError: () => void;
+  updateSessionContext: (intention: 'login' | 'logout' | 'register' | 'init') => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -201,6 +202,7 @@ export const AuthContextProvider = ({
         registrationError,
         clearLoginError,
         clearRegistrationError,
+        updateSessionContext,
       }}
     >
       {children}

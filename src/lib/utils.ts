@@ -81,7 +81,7 @@ export const warningToast = (message: string = 'Uh-oh.', description: string | R
   });
 };
 
-export const errorToast = (message: string = 'Success.', description: string | ReactNode): void => {
+export const errorToast = (message: string = 'Error.', description: string | ReactNode): void => {
   toast.error(message, {
     position: 'top-center',
     duration: 7000,
