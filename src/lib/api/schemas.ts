@@ -82,6 +82,13 @@ export interface User {
   password_hash: string;
 }
 
+export interface OAuthUser {
+  id: number;
+  user_id: number;
+  provider: string;
+  provider_user_id: string;
+}
+
 export interface Favorite {
   id: number;
   user_id: string;
@@ -99,6 +106,39 @@ export interface NewFavorite {
   userId: number | undefined;
   stationId: string | null;
   station: RadioStation;
+}
+
+export interface GoogleToken {
+  access_token: string;
+  expires_in: number;
+  id_token: string;
+  scope: string;
+  token_type: string;
+}
+
+export interface GoogleUserInfo {
+  sub: string;
+  email: string;
+  name: string;
+  picture: string;
+}
+
+export interface GithubToken {
+  access_token: string;
+  scope: string;
+  token_type: string;
+}
+
+export interface GithubUserInfo {
+  login: string;
+  id: number;
+}
+
+export interface GithubEmailInfo {
+  email: string;
+  primary: boolean;
+  verified: boolean;
+  visibility: string | null;
 }
 
 /*
@@ -122,6 +162,7 @@ export class HTTPError extends Error {
   public status: number;
   constructor(message: string, status: number) {
     super(message);
+    this.name = 'HTTPError';
     this.status = status;
   }
 }
@@ -136,6 +177,40 @@ export class SchemaError extends Error {
     status: number = 500
   ) {
     super(message);
+    this.name = 'SchemaError';
     this.status = status;
   }
 }
+
+export type OAuthErrorType =
+  | 'state_mismatch'
+  | 'token_gen'
+  | 'user_info'
+  | 'session_creation'
+  | 'db_registration'
+  | 'unknown';
+
+/*
+  Custom error clas for OAuth errors.
+*/
+
+export class OAuthError extends Error {
+  public provider: string;
+  public errorType: string;
+
+  constructor(provider: string, errorType: OAuthErrorType, message: string = 'OAuth Error') {
+    super(message);
+    this.name = 'OAuthError';
+    this.provider = provider;
+    this.errorType = errorType;
+  }
+}
+
+// OAuth error types
+/**
+ * state mismatch
+ * token generation
+ * no user info
+ * failed to create login session
+ * failed registration on db
+ */
