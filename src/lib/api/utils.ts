@@ -1,10 +1,11 @@
 import { promises as dns, SrvRecord } from 'dns';
 import { pgPool } from './db/db';
 import { QueryResult } from 'pg';
-import { RadioBrowserServerError, User } from './schemas';
+import { OAuthUser, RadioBrowserServerError, User } from './schemas';
 
 const DB_SCHEMA: string = process.env.DB_SCHEMA as string;
 const DB_USERS_TABLE: string = process.env.DB_USERS_TABLE as string;
+const DB_OAUTH_USERS_TABLE: string = process.env.DB_OAUTH_USERS_TABLE as string;
 let baseUrl: string | null = null;
 const goodBaseUrls = new Set<string>();
 
@@ -144,6 +145,23 @@ export const checkIfUserExists = async (
   };
 
   const queryRes: QueryResult<User> = await pgPool.query(query);
+
+  return queryRes.rows[0];
+};
+
+/*
+  Check if OAuth user exists by passing in a field and value.
+*/
+export const checkIfOAuthUserExists = async (
+  provider: string,
+  providerUserId: string
+): Promise<OAuthUser | undefined> => {
+  const query = {
+    text: `SELECT * FROM ${DB_SCHEMA}.${DB_OAUTH_USERS_TABLE} WHERE provider = $1 AND provider_user_id = $2;`,
+    values: [provider, providerUserId],
+  };
+
+  const queryRes: QueryResult<OAuthUser> = await pgPool.query(query);
 
   return queryRes.rows[0];
 };
