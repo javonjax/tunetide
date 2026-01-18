@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     scope: 'openid email profile',
     state,
   });
-
+  console.log(params);
   const response = NextResponse.redirect(`${GOOGLE_OAUTH_URI}?${params.toString()}`);
 
   response.cookies.set('oauth_state', state, {
