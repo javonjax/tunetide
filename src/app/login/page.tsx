@@ -110,7 +110,7 @@ const LoginPage = (): React.JSX.Element => {
           </p>
           <p className="text-[14px]">Or log in with</p>
           <div className="flex w-full items-center justify-evenly">
-            <Link
+            <a
               href={`${GOOGLE_OAUTH_ENDPOINT}?source=login`}
               className="flex w-[25%] flex-col items-center justify-center gap-2 p-2"
             >
@@ -122,14 +122,14 @@ const LoginPage = (): React.JSX.Element => {
                 loading="lazy"
               ></Image>
               <p className="text-[14px]">Google</p>
-            </Link>
-            <Link
+            </a>
+            <a
               href={`${GITHUB_OAUTH_ENDPOINT}?source=login`}
               className="flex w-[25%] flex-col items-center justify-center gap-2 p-2"
             >
               <Github width={24} height={24} />
               <p className="text-[14px]">GitHub</p>
-            </Link>
+            </a>
           </div>
         </div>
       </div>
