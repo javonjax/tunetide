@@ -64,6 +64,7 @@ export async function GET(request: NextRequest) {
     }
 
     console.log('getting user info');
+    console.log(token.access_token);
     // Fetch user info using the token.
     const userInfoRes: globalThis.Response = await fetch(GOOGLE_OAUTH_USER_INFO_URI, {
       headers: {
@@ -115,6 +116,7 @@ export async function GET(request: NextRequest) {
       userId = userExistsUnderEmail.rows[0].id;
     }
 
+    console.log('user-id', userId);
     // Create new OAuth user account in the DB and start session.
     query = {
       text: `INSERT INTO ${DB_SCHEMA}.${DB_OAUTH_USERS_TABLE} (user_id, provider, provider_user_id) VALUES ($1, $2, $3) RETURNING id;`,
