@@ -43,6 +43,8 @@ export async function GET(request: NextRequest) {
       redirect_uri: GOOGLE_OAUTH_REDIRECT_URI,
     });
     console.log(body);
+    console.log(reqSource);
+    console.log('getting token');
     const tokenRes: globalThis.Response = await fetch(GOOGLE_OAUTH_TOKEN_URI, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -61,6 +63,7 @@ export async function GET(request: NextRequest) {
       throw new OAuthError(PROVIDER, 'token_gen');
     }
 
+    console.log('getting user info');
     // Fetch user info using the token.
     const userInfoRes: globalThis.Response = await fetch(GOOGLE_OAUTH_USER_INFO_URI, {
       headers: {
@@ -74,6 +77,7 @@ export async function GET(request: NextRequest) {
 
     const userInfo: GoogleUserInfo = await userInfoRes.json();
 
+    console.log('checking oauth user');
     // Check for existing OAuth user account in the DB. Start session if one exists.
     const oauthUser: OAuthUser | undefined = await checkIfOAuthUserExists(PROVIDER, userInfo.sub);
 
