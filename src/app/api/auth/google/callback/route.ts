@@ -35,6 +35,14 @@ export async function GET(request: NextRequest) {
     response.cookies.delete('oauth_req_source');
 
     // Generate tokens.
+    const body = new URLSearchParams({
+      client_id: GOOGLE_OAUTH_CLIENT_ID,
+      client_secret: GOOGLE_OAUTH_SECRET,
+      code: code,
+      grant_type: 'authorization_code',
+      redirect_uri: GOOGLE_OAUTH_REDIRECT_URI,
+    });
+    console.log(body);
     const tokenRes: globalThis.Response = await fetch(GOOGLE_OAUTH_TOKEN_URI, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
