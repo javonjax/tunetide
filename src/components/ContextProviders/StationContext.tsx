@@ -24,14 +24,12 @@ export const StationContextProvider = ({ children }: { children: React.ReactNode
   const playAndUpdateClickCount = async (station: RadioStation): Promise<void> => {
     try {
       setIsPlaying(true);
-      const res: globalThis.Response = await handleAPIFetch(
+      await handleAPIFetch(
         await fetch(`/api/modify/clicks?uuid=${station.stationuuid}`, {
           method: 'POST',
           credentials: 'include',
         })
       );
-      const test = await res.json();
-      console.log(test);
     } catch (error) {
       if (error instanceof APIError) {
         handleAPIError(error);

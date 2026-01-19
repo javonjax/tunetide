@@ -152,7 +152,6 @@ export async function GET(request: NextRequest) {
     }
     return NextResponse.redirect(`${APP_URL}/${reqSource}?status=success`);
   } catch (error) {
-    console.log(error);
     if (error instanceof OAuthError) {
       const { errorType } = error;
       return NextResponse.redirect(

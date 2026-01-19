@@ -17,9 +17,6 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
     const url: string = `${baseUrl}/vote/${stationUUID}`;
     const res: globalThis.Response = await RadioAPIFetch(url);
 
-    const test = await res.json();
-    console.log(test);
-
     if (!res.ok) {
       throw new Error(`Failed to update vote count for stationUUID: ${stationUUID}`);
     }

@@ -35,16 +35,6 @@ export async function GET(request: NextRequest) {
     response.cookies.delete('oauth_req_source');
 
     // Generate tokens.
-    const body = new URLSearchParams({
-      client_id: GOOGLE_OAUTH_CLIENT_ID,
-      client_secret: GOOGLE_OAUTH_SECRET,
-      code: code,
-      grant_type: 'authorization_code',
-      redirect_uri: GOOGLE_OAUTH_REDIRECT_URI,
-    });
-    console.log(body);
-    console.log(reqSource);
-    console.log('getting token');
     const tokenRes: globalThis.Response = await fetch(GOOGLE_OAUTH_TOKEN_URI, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -63,22 +53,19 @@ export async function GET(request: NextRequest) {
       throw new OAuthError(PROVIDER, 'token_gen');
     }
 
-    console.log('getting user info');
     // Fetch user info using the token.
     const userInfoRes: globalThis.Response = await fetch(GOOGLE_OAUTH_USER_INFO_URI, {
       headers: {
         Authorization: `Bearer ${token.access_token}`,
       },
     });
-    console.log(userInfoRes);
 
     if (!userInfoRes.ok) {
       throw new OAuthError(PROVIDER, 'user_info');
     }
 
     const userInfo: GoogleUserInfo = await userInfoRes.json();
-    console.log(userInfo);
-    console.log('checking oauth user');
+
     // Check for existing OAuth user account in the DB. Start session if one exists.
     const oauthUser: OAuthUser | undefined = await checkIfOAuthUserExists(PROVIDER, userInfo.sub);
 
@@ -116,7 +103,6 @@ export async function GET(request: NextRequest) {
       userId = userExistsUnderEmail.rows[0].id;
     }
 
-    console.log('user-id', userId);
     // Create new OAuth user account in the DB and start session.
     query = {
       text: `INSERT INTO ${DB_SCHEMA}.${DB_OAUTH_USERS_TABLE} (user_id, provider, provider_user_id) VALUES ($1, $2, $3) RETURNING id;`,
@@ -135,7 +121,6 @@ export async function GET(request: NextRequest) {
     }
     return NextResponse.redirect(`${APP_URL}/${reqSource}?status=success`);
   } catch (error) {
-    console.log(error);
     if (error instanceof OAuthError) {
       const { errorType } = error;
       return NextResponse.redirect(
