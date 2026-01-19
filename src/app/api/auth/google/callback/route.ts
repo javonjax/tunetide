@@ -64,7 +64,6 @@ export async function GET(request: NextRequest) {
     }
 
     console.log('getting user info');
-    console.log(token.access_token);
     // Fetch user info using the token.
     const userInfoRes: globalThis.Response = await fetch(GOOGLE_OAUTH_USER_INFO_URI, {
       headers: {
@@ -77,7 +76,7 @@ export async function GET(request: NextRequest) {
     }
 
     const userInfo: GoogleUserInfo = await userInfoRes.json();
-
+    console.log(userInfo);
     console.log('checking oauth user');
     // Check for existing OAuth user account in the DB. Start session if one exists.
     const oauthUser: OAuthUser | undefined = await checkIfOAuthUserExists(PROVIDER, userInfo.sub);
