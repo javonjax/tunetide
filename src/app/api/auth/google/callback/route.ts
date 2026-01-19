@@ -70,6 +70,7 @@ export async function GET(request: NextRequest) {
         Authorization: `Bearer ${token.access_token}`,
       },
     });
+    console.log(userInfoRes);
 
     if (!userInfoRes.ok) {
       throw new OAuthError(PROVIDER, 'user_info');
