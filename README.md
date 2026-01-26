@@ -1,5 +1,7 @@
 # Tunetide - Radio Browser
-
+This project is hosted on [Vercel](https://vercel.com/) <br/>
+<br/>
+https://tunetideradio.vercel.app/
 ## Description
 
 Tunetide is a full-stack web application that allows users to explore and listen to radio stations from around the world in real time. The app provides an intuitive interface for discovering global radio content across different countries and genres.
