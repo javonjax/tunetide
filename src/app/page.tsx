@@ -16,7 +16,7 @@ import LoadingSpinner from '@/components/ui/Custom/LoadingSpinner';
 import CarouselCard from '@/components/HomePage/CarouselCard';
 import Link from 'next/link';
 import { useFetchTrendingStations } from '@/lib/hooks/useFetchTrendingStations';
-import { useFetchMostPopularTags } from '@/lib/hooks/useFetchMostPopular';
+import { useFetchMostPopularTags } from '@/lib/hooks/useFetchMostPopularTags';
 import { useFetchRecentlyClicked } from '@/lib/hooks/useFetchRecentlyClicked';
 import { useFetchDiscoverStations } from '@/lib/hooks/useFetchDiscoverStations';
 import {

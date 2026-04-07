@@ -14,5 +14,6 @@ export const useFetchStationClicks = (stationuuid: string) => {
     queryKey: ['fetchStationClicks', stationuuid],
     queryFn: fetchStationClicks,
     retry: false,
+    staleTime: 1000 * 60 * 5,
   });
 };

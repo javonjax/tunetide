@@ -14,5 +14,6 @@ export const useFetchRecentlyClicked = () => {
     queryKey: ['fetchRecentlyClickedStations'],
     queryFn: fetchRecentlyClickedStations,
     retry: false,
+    staleTime: 1000 * 60 * 5,
   });
 };

@@ -25,5 +25,6 @@ export const useFetchLocalStations = (location: Coordinates | undefined) => {
     queryKey: ['fetchLocalStations', location?.latitude, location?.longitude],
     queryFn: fetchLocalStations,
     enabled: !!location?.latitude && !!location?.longitude,
+    staleTime: 1000 * 60 * 5,
   });
 };
