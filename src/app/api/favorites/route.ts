@@ -1,4 +1,5 @@
 import { pgPool } from '@/lib/api/db/db';
+import { withErrorHandler } from '@/lib/api/errorHandler';
 import { NewFavorite, HTTPError, RadioStation } from '@/lib/api/schemas';
 import { NextRequest, NextResponse } from 'next/server';
 import { QueryResult } from 'pg';
@@ -8,6 +9,10 @@ const DB_FAVORITES_TABLE: string = process.env.DB_FAVORITES_TABLE as string;
 
 export const POST = async (request: NextRequest): Promise<NextResponse> => {
   try {
+    if (request.headers.get('x-auth-error')) {
+      throw new HTTPError('You must be logged in to add favorites.', 401);
+    }
+
     const { userId, stationId, station }: NewFavorite = await request.json();
 
     console.log('Checking that all params are present...');
@@ -68,41 +73,30 @@ export const POST = async (request: NextRequest): Promise<NextResponse> => {
   }
 };
 
-export const DELETE = async (request: NextRequest): Promise<NextResponse> => {
-  try {
-    const { userId, station }: { userId: string; station: RadioStation } = await request.json();
-
-    if (!userId) {
-      throw new HTTPError('You must be logged in to add favorites.', 400);
-    }
-
-    if (!station || !station.stationuuid) {
-      console.error('Station or station id missing from DELETE request.');
-      throw new HTTPError('Unable to update favorites at this time.', 400);
-    }
-
-    const query = {
-      text: `DELETE FROM ${DB_SCHEMA}.${DB_FAVORITES_TABLE} WHERE user_id = $1 and station_id = $2 RETURNING id;`,
-      values: [userId, station.stationuuid],
-    };
-
-    const queryRes: QueryResult<{ id: number }> = await pgPool.query(query);
-    if (!queryRes.rowCount) {
-      throw new HTTPError('Failed to update favorites. Please try again later.', 500);
-    }
-
-    return NextResponse.json({ message: `${station.name} was removed from your favorites.` });
-  } catch (error) {
-    let message: string = 'Internal server error';
-    let status: number | undefined = undefined;
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-    if (error instanceof HTTPError) {
-      status = error.status;
-    }
-
-    return NextResponse.json({ error: message }, { status: status || 500 });
+export const DELETE = withErrorHandler(async (request: NextRequest): Promise<NextResponse> => {
+  if (request.headers.get('x-auth-error')) {
+    throw new HTTPError('You must be logged in to add favorites.', 401);
   }
-};
+  const { userId, station }: { userId: string; station: RadioStation } = await request.json();
+
+  if (!userId) {
+    throw new HTTPError('You must be logged in to add favorites.', 400);
+  }
+
+  if (!station || !station.stationuuid) {
+    console.error('Station or station id missing from DELETE request.');
+    throw new HTTPError('Unable to update favorites at this time.', 400);
+  }
+
+  const query = {
+    text: `DELETE FROM ${DB_SCHEMA}.${DB_FAVORITES_TABLE} WHERE user_id = $1 and station_id = $2 RETURNING id;`,
+    values: [userId, station.stationuuid],
+  };
+
+  const queryRes: QueryResult<{ id: number }> = await pgPool.query(query);
+  if (!queryRes.rowCount) {
+    throw new HTTPError('Failed to update favorites. Please try again later.', 500);
+  }
+
+  return NextResponse.json({ message: `${station.name} was removed from your favorites.` });
+});

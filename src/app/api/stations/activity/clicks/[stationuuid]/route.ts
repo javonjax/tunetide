@@ -8,23 +8,20 @@ import {
   StationClick,
   StationClicksAPIResponse,
 } from '@/lib/api/schemas';
+import { withErrorHandler } from '@/lib/api/errorHandler';
+import { cacheFetch } from '@/lib/api/redisCache';
 
-/*
-  GET all radio stations.
-  WARNING: This API will return up to 100,000 items.
-           Use the /stations API with query params to get faster results.
-*/
-export const GET = async (
-  request: NextRequest,
-  {
-    params,
-  }: {
-    params: Promise<{ stationuuid: string }>;
-  }
-): Promise<NextResponse> => {
-  const { stationuuid }: { stationuuid: string } = await params;
+export const GET = withErrorHandler(
+  async (
+    request: NextRequest,
+    {
+      params,
+    }: {
+      params: Promise<{ stationuuid: string }>;
+    }
+  ): Promise<NextResponse> => {
+    const { stationuuid }: { stationuuid: string } = await params;
 
-  try {
     const baseUrl: string = await getBaseUrl();
     const queryParams: string = request.nextUrl.searchParams.toString();
     const url: string = `${baseUrl}/clicks/${stationuuid}?${queryParams}`;
@@ -60,17 +57,5 @@ export const GET = async (
     }));
 
     return NextResponse.json(clicksChartData);
-  } catch (error) {
-    let message: string = 'Internal server error';
-    let status: number = 500;
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-    if (error instanceof HTTPError) {
-      status = error.status;
-    }
-
-    return NextResponse.json({ error: message }, { status: status || 500 });
   }
-};
+);
