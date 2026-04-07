@@ -93,6 +93,6 @@ export const loginPasswordValidation = {
 
 export type LoginPasswordValidation = typeof loginPasswordValidation;
 
-export interface SessionPayload extends JWTPayload {
+export interface TokenPayload extends JWTPayload {
   userId: number;
 }
