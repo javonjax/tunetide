@@ -42,9 +42,8 @@ export const verifyToken = async (token: string | undefined): Promise<TokenPaylo
 };
 
 export const createSession = async (userId: number): Promise<boolean> => {
+  const cookieStore = await cookies();
   try {
-    const cookieStore = await cookies();
-
     const accessToken: string = await signToken({
       userId: userId,
       exp: ACCESS_TOKEN_EXPIRATION,
