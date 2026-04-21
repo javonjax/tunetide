@@ -45,5 +45,6 @@ export const useFetchStations = (
   return useQuery<{ stations: RadioStation[]; hasMore: boolean }>({
     queryKey: ['fetchStations', searchParamString],
     queryFn: fetchStations,
+    staleTime: 1000 * 60 * 5,
   });
 };

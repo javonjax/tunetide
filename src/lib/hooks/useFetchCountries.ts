@@ -16,5 +16,6 @@ export const useFetchCountries = () => {
   return useQuery<{ countries: Country[]; longestLabel: string }>({
     queryKey: ['fetchCountries'],
     queryFn: fetchCountries,
+    staleTime: 1000 * 60 * 60,
   });
 };

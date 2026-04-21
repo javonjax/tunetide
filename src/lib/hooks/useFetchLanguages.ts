@@ -16,5 +16,6 @@ export const useFetchLanguages = () => {
   return useQuery<{ languages: Language[]; longestLabel: string }>({
     queryKey: ['fetchLanguages'],
     queryFn: fetchLanguages,
+    staleTime: 1000 * 60 * 60,
   });
 };

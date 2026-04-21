@@ -1,4 +1,5 @@
 import { pgPool } from '@/lib/api/db/db';
+import { withErrorHandler } from '@/lib/api/errorHandler';
 import { Favorite, HTTPError } from '@/lib/api/schemas';
 import { NextRequest, NextResponse } from 'next/server';
 import { QueryResult } from 'pg';
@@ -6,11 +7,11 @@ import { QueryResult } from 'pg';
 const DB_SCHEMA: string = process.env.DB_SCHEMA as string;
 const DB_FAVORITES_TABLE: string = process.env.DB_FAVORITES_TABLE as string;
 
-export const GET = async (
-  request: NextRequest,
-  { params }: { params: Promise<{ userId: string }> }
-): Promise<NextResponse> => {
-  try {
+export const GET = withErrorHandler(
+  async (
+    request: NextRequest,
+    { params }: { params: Promise<{ userId: string }> }
+  ): Promise<NextResponse> => {
     const { userId }: { userId: string } = await params;
     const searchParams: URLSearchParams = request.nextUrl.searchParams;
     const {
@@ -66,17 +67,5 @@ export const GET = async (
       favorites: page && Number(page) > 0 ? queryRes.rows.slice(0, itemsPerPage) : queryRes.rows,
       hasMore: hasMore,
     });
-  } catch (error) {
-    let message: string = 'Internal server error';
-    let status: number | undefined = undefined;
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-    if (error instanceof HTTPError) {
-      status = error.status;
-    }
-
-    return NextResponse.json({ error: message }, { status: status || 500 });
   }
-};
+);

@@ -14,5 +14,6 @@ export const useFetchTrendingStations = () => {
     queryKey: ['fetchTrendingStations'],
     queryFn: fetchTrendingStations,
     retry: false,
+    staleTime: 1000 * 60 * 5,
   });
 };

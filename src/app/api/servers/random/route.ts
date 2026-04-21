@@ -1,25 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getRandomRadioBrowserBaseUrl } from '@/lib/api/utils';
-import { HTTPError } from '@/lib/api/schemas';
+import { withErrorHandler } from '@/lib/api/errorHandler';
 
 /*
   GET a random available radio-browser server url.
  */
-export const GET = async () => {
-  try {
-    const res: string = await getRandomRadioBrowserBaseUrl();
-    return Response.json({ server: res });
-  } catch (error) {
-    let message: string = 'Internal server error';
-    let status: number = 500;
-
-    if (error instanceof Error) {
-      message = error.message;
-    }
-    if (error instanceof HTTPError) {
-      status = error.status;
-    }
-
-    return NextResponse.json({ error: message }, { status: status || 500 });
-  }
-};
+export const GET = withErrorHandler(async () => {
+  const res: string = await getRandomRadioBrowserBaseUrl();
+  return NextResponse.json({ server: res });
+});

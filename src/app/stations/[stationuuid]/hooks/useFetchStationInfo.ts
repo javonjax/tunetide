@@ -18,5 +18,6 @@ export const useFetchStationInfo = (stationuuid: string) => {
     queryKey: ['fetchStation', stationuuid],
     queryFn: fetchStation,
     retry: false,
+    staleTime: 1000 * 60 * 60,
   });
 };

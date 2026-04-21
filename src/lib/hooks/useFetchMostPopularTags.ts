@@ -14,5 +14,6 @@ export const useFetchMostPopularTags = () => {
     queryKey: ['fetchMostPopularTags'],
     queryFn: fetchMostPopularTags,
     retry: false,
+    staleTime: 1000 * 60 * 5,
   });
 };

@@ -41,7 +41,7 @@ export class APIError extends Error {
 export const handleAPIFetch = async (res: globalThis.Response): Promise<globalThis.Response> => {
   if (!res.ok) {
     const body = await res.json();
-    const message: string = body?.error || 'API fetch error.';
+    const message: string = body?.message || body?.error || 'API fetch error.';
     const status: number = body?.status ?? res.status;
     throw new APIError(message, status);
   }
