@@ -9,7 +9,6 @@ import {
   StationClicksAPIResponse,
 } from '@/lib/api/schemas';
 import { withErrorHandler } from '@/lib/api/errorHandler';
-import { cacheFetch } from '@/lib/api/redisCache';
 
 export const GET = withErrorHandler(
   async (
